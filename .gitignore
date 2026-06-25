@@ -1,0 +1,26 @@
+# Local installers and large binaries
+*.exe
+*.msi
+*.zip
+*.rar
+*.7z
+
+# Python cache and virtual environments
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Media scratch files
+*.wav
+*.mp3
+*.m4a
+*.mp4
+*.mov
+*.flac
+
+# OS/editor noise
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

@@ -72,6 +72,34 @@ def count_words(text: str) -> int:
     return len([part for part in text.replace("\n", " ").split(" ") if part.strip()])
 
 
+def count_cjk_chars(text: str) -> int:
+    return sum(1 for char in text if "\u4e00" <= char <= "\u9fff")
+
+
+def visible_len(text: str) -> int:
+    return len(text.strip())
+
+
+def lyric_line_checks(text: str) -> list[str]:
+    lines = [line.strip() for line in text.splitlines() if line.strip()]
+    if not lines:
+        return ["Lyric lines: 0"]
+    longest_line = max(visible_len(line) for line in lines)
+    checks = [f"Lyric lines: {len(lines)}", f"Longest visible line: {longest_line} characters"]
+    cjk_lines = [line for line in lines if count_cjk_chars(line)]
+    if cjk_lines:
+        longest_cjk = max(count_cjk_chars(line) for line in cjk_lines)
+        long_cjk_lines = sum(1 for line in cjk_lines if count_cjk_chars(line) > 18)
+        checks.extend(
+            [
+                f"Lyrics CJK characters: {count_cjk_chars(text)}",
+                f"Longest CJK line: {longest_cjk} characters",
+                f"CJK lines over 18 chars: {long_cjk_lines}",
+            ]
+        )
+    return checks
+
+
 def field_checks(package: dict[str, object]) -> list[str]:
     style = str(package["style_of_music"])
     lyrics = str(package["lyrics"])
@@ -80,6 +108,7 @@ def field_checks(package: dict[str, object]) -> list[str]:
         f"Style characters: {len(style)}",
         f"Lyrics characters: {len(lyrics)}",
         f"Lyrics words: {count_words(lyrics)}",
+        *lyric_line_checks(lyrics),
     ]
     if exclude:
         exclude_count = len([item for item in exclude.split(",") if item.strip()])

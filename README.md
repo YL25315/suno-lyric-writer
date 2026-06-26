@@ -8,6 +8,7 @@ Suno Lyric Writer is a Codex skill for turning song ideas, lyrics, and reference
 - Builds focused Suno `Style of Music` prompts instead of long, conflicting genre lists.
 - Suggests `Exclude Styles`, `Weirdness`, `Style Influence`, `Audio Influence`, vocal notes, persona notes, and production tips.
 - Analyzes reference audio, video, lyrics, subtitles, or transcripts for reusable creative traits.
+- Performs deeper local audio analysis for BPM candidates, groove density, energy sections, texture, and optional key/chord hints.
 - Includes curated genre prompts, Suno tags, vocal effects, rap/rock style maps, and tag-combination guidance.
 - Offers 2-3 creative directions, then turns feedback into a finished Suno prompt and lyric package.
 - Supports Chinese lyric writing and revision with natural Mandarin phrasing, compact singable lines, hook checks, and anti-cliche passes.
@@ -32,6 +33,7 @@ suno-lyric-writer/
     tag-combination-guide.md
   scripts/
     build_suno_prompt.py
+    deep_audio_analyze.py
     media_reference_probe.py
 ```
 
@@ -105,6 +107,14 @@ python .\suno-lyric-writer\scripts\build_suno_prompt.py `
 
 ```powershell
 python .\suno-lyric-writer\scripts\media_reference_probe.py .\reference.mp4 --extract-audio reference.wav
+```
+
+`scripts/deep_audio_analyze.py` estimates tempo candidates, onset density, energy sections, dynamics, brightness, and Suno-ready style traits. It works with `ffmpeg` only; installing `librosa`, `numpy`, `scipy`, and `soundfile` adds optional key and rough chord analysis.
+
+```powershell
+python .\suno-lyric-writer\scripts\deep_audio_analyze.py `
+  "C:\Users\21905\Downloads\reference.mp3" `
+  --out reference-analysis.md
 ```
 
 ## Design Principles

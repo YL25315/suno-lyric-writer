@@ -17,6 +17,20 @@ Extract reusable creative traits:
 
 Do not copy melody, lyrics, distinctive arrangement signatures, or named-artist identity. Translate references into general musical and lyric-writing traits.
 
+## Analysis Tiers
+
+Tier 1 metadata probe:
+
+- Run `scripts/media_reference_probe.py <path>` for duration, streams, codecs, tags, embedded lyric metadata, and optional 16 kHz mono extraction.
+- Use this first for any local audio or video path.
+
+Tier 2 deep musical analysis:
+
+- Run `scripts/deep_audio_analyze.py <path>` when the user asks for deeper analysis or when BPM, groove, energy arc, or arrangement pacing matters.
+- The script works with `ffmpeg` only for tempo candidates, onset density, RMS energy, zero-crossing texture, rough section roles, and Suno style traits.
+- If optional `librosa`, `numpy`, `scipy`, and `soundfile` dependencies are installed, it also adds key estimates, a tempo cross-check, and rough chord windows.
+- Treat all BPM, key, chord, and section labels as creative guidance. Do not present them as guaranteed musicological facts.
+
 ## Intake Modes
 
 Direct media mode:
@@ -28,6 +42,7 @@ Direct media mode:
 Local file mode:
 
 - If the user provides a local media path, run `scripts/media_reference_probe.py <path>` to summarize duration, streams, codecs, and tags.
+- If the user asks for "deep", "BPM", "key", "chords", "section", "arrangement", "energy", or stronger reference extraction, also run `scripts/deep_audio_analyze.py <path>`.
 - Use `--extract-audio <out.wav>` when a clean audio file is needed for transcription or external analysis.
 - If speech-to-text is available, transcribe likely vocal sections. If not, ask the user for lyrics or accept a rough transcript.
 
@@ -48,6 +63,7 @@ Use this shape before drafting when media meaningfully affects the song:
 Reference Analysis:
 - Audible style:
 - Tempo/groove:
+- Deep audio notes:
 - Arrangement:
 - Vocal:
 - Production:
@@ -97,3 +113,11 @@ When media is used, include:
 - Next Feedback Questions
 
 Keep the analysis compact enough that the user can make a decision quickly.
+
+## Turning Analysis Into Suno Prompts
+
+- Convert exact measurements into musical language: `92 BPM estimate` becomes `mid-tempo groove`.
+- Use energy sections as arrangement guidance: `low intro -> high chorus` becomes `sparse verse, lifted chorus`.
+- Use key and chord guesses only as mood hints unless confidence is high: `minor tonal center` becomes `minor-key mood`.
+- Prefer the generated `suno_style_traits` and `suno_style_prompt_seed` over raw analyzer fields.
+- Keep the final Style of Music field to 4-7 high-value descriptors unless the user asks for a technical prompt.

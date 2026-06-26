@@ -8,6 +8,7 @@ Suno Lyric Writer is a Codex skill for turning song ideas, lyrics, and reference
 - Builds focused Suno `Style of Music` prompts instead of long, conflicting genre lists.
 - Suggests `Exclude Styles`, `Weirdness`, `Style Influence`, `Audio Influence`, vocal notes, persona notes, and production tips.
 - Analyzes reference audio, video, lyrics, subtitles, or transcripts for reusable creative traits.
+- Includes curated genre prompts, Suno tags, vocal effects, rap/rock style maps, and tag-combination guidance.
 - Offers 2-3 creative directions, then turns feedback into a finished Suno prompt and lyric package.
 - Supports Chinese lyric writing with natural phrasing rather than translation-style wording.
 - Keeps copyrighted references safe by borrowing traits, not melody, lyrics, or named-artist identity.
@@ -20,10 +21,14 @@ suno-lyric-writer/
   agents/openai.yaml
   references/
     quality-review.md
+    genre-prompt-library.md
+    rap-rock-style-map.md
     reference-media.md
     songwriting-craft.md
     style-parameters.md
     suno-formatting.md
+    suno-tag-vocabulary.md
+    tag-combination-guide.md
   scripts/
     build_suno_prompt.py
     media_reference_probe.py

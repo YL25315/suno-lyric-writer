@@ -2,6 +2,8 @@
 
 Use this file when building Style of Music, Exclude Styles, and generation parameters.
 
+For specific subgenre wording, use `genre-prompt-library.md`. For rap/rock/metal/guitar styles, use `rap-rock-style-map.md`. For bracketed arrangement tags and vocal effects, use `suno-tag-vocabulary.md`. For unusual combinations from large tag lists, use `tag-combination-guide.md`.
+
 ## Style Prompt Formula
 
 Use the fewest descriptors that pin down the result. The reliable sweet spot is 4-7 meaningful descriptors. Too few descriptors lets Suno fill with generic defaults; too many descriptors makes the ideas fight each other.

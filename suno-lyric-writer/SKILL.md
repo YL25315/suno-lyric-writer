@@ -1,6 +1,6 @@
 ---
 name: suno-lyric-writer
-description: Write original song lyrics and Suno-ready Custom Mode inputs including title, structured lyrics with section tags, style-of-music prompt, exclude styles, vocal notes, creative sliders, production tips, and iteration notes. Analyze user-provided reference audio or video to extract style traits, lyric-writing references, arrangement notes, and a feedback-driven creative brief. Use when the user asks to write lyrics, make a song for Suno, prepare music style and parameters, convert an idea or reference media into Suno prompts, revise lyrics for singability, create instrumental or genre-switch prompts, or package copy-paste material for AI music generation.
+description: Write original song lyrics and Suno-ready Custom Mode inputs including title, structured lyrics with section tags, style-of-music prompt, exclude styles, vocal notes, creative sliders, production tips, and iteration notes. Analyze user-provided reference audio or video to extract style traits, lyric-writing references, arrangement notes, and a feedback-driven creative brief. Use curated genre prompts, Suno tag vocabulary, vocal effects, rap/rock style maps, and tag-combination guidance when the user asks for exact style wording. Use when the user asks to write lyrics, make a song for Suno, prepare music style and parameters, convert an idea or reference media into Suno prompts, revise lyrics for singability, create instrumental or genre-switch prompts, or package copy-paste material for AI music generation.
 ---
 
 # Suno Lyric Writer
@@ -16,6 +16,7 @@ Deliver copy-paste-ready Suno material:
 5. Parameters
 6. Production tips and notes for the next generation pass
 7. Reference analysis when audio, video, transcript, or lyrics are provided
+8. Genre/tag vocabulary support when the user needs exact Suno wording
 
 If the user writes in Chinese or asks for Chinese lyrics, respond in Chinese and write natural Chinese lyrics. Keep Suno section tags in English unless the user asks otherwise.
 
@@ -41,6 +42,10 @@ If the user writes in Chinese or asks for Chinese lyrics, respond in Chinese and
    - Use explicit section tags and concise lines. Keep each section singable before making it clever.
 6. Build the Suno style prompt.
    - Read `references/style-parameters.md` when choosing genre/style wording, sliders, vocal settings, model notes, exclude styles, or persona/audio-upload guidance.
+   - Read `references/genre-prompt-library.md` when the user wants a specific genre, subgenre, or polished Suno-ready style phrase.
+   - Read `references/rap-rock-style-map.md` for rap, hip-hop, rock, punk, metal, shoegaze, grunge, and related guitar-driven styles.
+   - Read `references/suno-tag-vocabulary.md` when choosing bracketed arrangement tags, vocal effects, spoken-word cues, or bilingual music terminology.
+   - Read `references/tag-combination-guide.md` when using large tag-list material or combining instruments, regions, eras, and subgenres.
    - Keep the style prompt focused. Prefer 4-7 strong descriptors over a long genre soup.
    - Put the most important control first: usually genre; vocal description first when vocal identity or vocal mix clarity is the main risk.
 7. Format for Suno.

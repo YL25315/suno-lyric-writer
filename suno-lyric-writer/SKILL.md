@@ -1,6 +1,6 @@
 ---
 name: suno-lyric-writer
-description: Write original song lyrics and Suno-ready Custom Mode inputs including title, structured lyrics with section tags, style-of-music prompt, exclude styles, vocal notes, creative sliders, production tips, and iteration notes. Analyze user-provided reference audio or video to extract style traits, lyric-writing references, arrangement notes, and a feedback-driven creative brief. Use curated genre prompts, Suno tag vocabulary, vocal effects, rap/rock style maps, Chinese lyric craft guidance, and tag-combination guidance when the user asks for exact style wording or natural Mandarin lyrics. Use when the user asks to write lyrics, make a song for Suno, prepare music style and parameters, convert an idea or reference media into Suno prompts, revise lyrics for singability, optimize Chinese lyrics, create instrumental or genre-switch prompts, or package copy-paste material for AI music generation.
+description: Write original song lyrics and Suno-ready Custom Mode inputs including title, structured lyrics with section tags, style-of-music prompt, exclude styles, vocal notes, creative sliders, production tips, and iteration notes. Analyze user-provided reference audio or video to extract style traits, tempo/groove, energy sections, tonal hints, lyric-writing references, arrangement notes, and a feedback-driven creative brief. Use curated genre prompts, Suno tag vocabulary, vocal effects, rap/rock style maps, Chinese lyric craft guidance, deep audio analysis, and tag-combination guidance when the user asks for exact style wording or natural Mandarin lyrics. Use when the user asks to write lyrics, make a song for Suno, prepare music style and parameters, convert an idea or reference media into Suno prompts, revise lyrics for singability, optimize Chinese lyrics, analyze reference audio, create instrumental or genre-switch prompts, or package copy-paste material for AI music generation.
 ---
 
 # Suno Lyric Writer
@@ -31,6 +31,7 @@ If the user writes in Chinese or asks for Chinese lyrics, respond in Chinese and
    - Read `references/reference-media.md` when the user provides audio, video, lyrics, a transcript, or a reference link.
    - Extract traits, not copies: genre, tempo feel, instrumentation, vocal tone, production texture, structure, lyric point of view, rhyme/cadence, hook mechanics, and energy arc.
    - If the runtime can directly inspect attached audio/video, use that first and cite timestamped observations. If only a local file path is available, use `scripts/media_reference_probe.py` for metadata and optional audio extraction.
+   - When the user asks for deeper reference analysis, or when tempo/section energy matters, run `scripts/deep_audio_analyze.py <path>` to estimate BPM candidates, onset density, energy sections, texture, optional key/chord hints, and Suno-ready style traits.
    - Present a short reference brief and 2-3 creative directions before drafting when the reference materially shapes the song.
 3. Protect originality.
    - Write new lyrics. Do not quote existing songs, continue a copyrighted lyric, or imitate a living artist by name.

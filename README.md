@@ -10,7 +10,7 @@ Suno Lyric Writer is a Codex skill for turning song ideas, lyrics, and reference
 - Analyzes reference audio, video, lyrics, subtitles, or transcripts for reusable creative traits.
 - Includes curated genre prompts, Suno tags, vocal effects, rap/rock style maps, and tag-combination guidance.
 - Offers 2-3 creative directions, then turns feedback into a finished Suno prompt and lyric package.
-- Supports Chinese lyric writing with natural phrasing rather than translation-style wording.
+- Supports Chinese lyric writing and revision with natural Mandarin phrasing, compact singable lines, hook checks, and anti-cliche passes.
 - Keeps copyrighted references safe by borrowing traits, not melody, lyrics, or named-artist identity.
 
 ## Skill Layout
@@ -21,6 +21,7 @@ suno-lyric-writer/
   agents/openai.yaml
   references/
     quality-review.md
+    chinese-lyric-craft.md
     genre-prompt-library.md
     rap-rock-style-map.md
     reference-media.md
@@ -89,6 +90,15 @@ python .\suno-lyric-writer\scripts\build_suno_prompt.py `
   --weirdness 45 `
   --style-influence 72 `
   --lyrics-file lyrics.txt
+```
+
+For Chinese lyrics, use a UTF-8 lyric file instead of piping text through PowerShell:
+
+```powershell
+python .\suno-lyric-writer\scripts\build_suno_prompt.py `
+  --title "别回头" `
+  --style "Mandarin indie pop, warm male vocal, mid-tempo, clean guitars and soft synth pads, bittersweet city-night mood" `
+  --lyrics-file .\lyrics-zh.txt
 ```
 
 `scripts/media_reference_probe.py` uses `ffprobe` and `ffmpeg` to inspect local audio/video and optionally extract 16 kHz mono WAV for transcription or additional analysis.

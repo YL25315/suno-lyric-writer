@@ -9,6 +9,23 @@ import sys
 from pathlib import Path
 
 
+def emit_text(text: str) -> None:
+    data = (text + "\n").encode("utf-8")
+    if hasattr(sys.stdout, "buffer"):
+        sys.stdout.buffer.write(data)
+    else:
+        sys.stdout.write(text + "\n")
+
+
+def decode_text_bytes(data: bytes) -> str:
+    for encoding in ("utf-8-sig", "utf-16", "gb18030"):
+        try:
+            return data.decode(encoding)
+        except UnicodeDecodeError:
+            continue
+    return data.decode("utf-8", errors="replace")
+
+
 def percent(value: str) -> int:
     try:
         parsed = int(value)
@@ -23,9 +40,9 @@ def read_lyrics(path_text: str | None) -> str:
     if not path_text:
         if sys.stdin.isatty():
             return ""
-        return sys.stdin.read().strip()
+        return decode_text_bytes(sys.stdin.buffer.read()).strip()
     if path_text == "-":
-        return sys.stdin.read().strip()
+        return decode_text_bytes(sys.stdin.buffer.read()).strip()
     return Path(path_text).read_text(encoding="utf-8").strip()
 
 
@@ -173,7 +190,7 @@ def main(argv: list[str] | None = None) -> int:
     if args.out:
         Path(args.out).write_text(output, encoding="utf-8")
     else:
-        print(output)
+        emit_text(output)
     return 0
 
 

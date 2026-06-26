@@ -1,4 +1,4 @@
 interface:
   display_name: "Suno Lyric Writer"
-  short_description: "Write lyrics and Suno-ready music prompts"
-  default_prompt: "Use $suno-lyric-writer to turn this song idea into structured lyrics, a Suno style prompt, and generation parameters."
+  short_description: "Write lyrics, Chinese lyric revisions, and Suno-ready prompts"
+  default_prompt: "Use $suno-lyric-writer to turn this song idea or Chinese lyric draft into structured lyrics, a Suno style prompt, and generation parameters."

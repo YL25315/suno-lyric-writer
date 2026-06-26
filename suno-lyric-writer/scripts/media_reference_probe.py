@@ -12,9 +12,24 @@ from pathlib import Path
 from typing import Any
 
 
+def emit_text(text: str) -> None:
+    data = (text + "\n").encode("utf-8")
+    if hasattr(sys.stdout, "buffer"):
+        sys.stdout.buffer.write(data)
+    else:
+        sys.stdout.write(text + "\n")
+
+
 def run_json(cmd: list[str]) -> dict[str, Any]:
     try:
-        result = subprocess.run(cmd, check=True, capture_output=True, text=True)
+        result = subprocess.run(
+            cmd,
+            check=True,
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+        )
     except FileNotFoundError as exc:
         raise SystemExit(f"error: missing executable: {cmd[0]}") from exc
     except subprocess.CalledProcessError as exc:
@@ -25,7 +40,14 @@ def run_json(cmd: list[str]) -> dict[str, Any]:
 
 def run_command(cmd: list[str]) -> None:
     try:
-        subprocess.run(cmd, check=True, capture_output=True, text=True)
+        subprocess.run(
+            cmd,
+            check=True,
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+        )
     except FileNotFoundError as exc:
         raise SystemExit(f"error: missing executable: {cmd[0]}") from exc
     except subprocess.CalledProcessError as exc:
@@ -47,6 +69,13 @@ def format_seconds(value: float | None) -> str:
     minutes = int(value // 60)
     secs = value - minutes * 60
     return f"{minutes}:{secs:04.1f}"
+
+
+def shorten_text(value: object, limit: int = 420) -> str:
+    text = str(value).replace("\r\n", "\n").replace("\r", "\n")
+    if len(text) <= limit:
+        return text
+    return text[:limit].rstrip() + f"... [truncated {len(text) - limit} chars]"
 
 
 def summarize_probe(path: Path, probe: dict[str, Any]) -> dict[str, Any]:
@@ -124,7 +153,7 @@ def render_markdown(summary: dict[str, Any], extracted_audio: str | None) -> str
     if tags:
         lines.extend(["", "## Tags"])
         for key, value in sorted(tags.items()):
-            lines.append(f"- {key}: {value}")
+            lines.append(f"- {key}: {shorten_text(value)}")
     lines.extend(
         [
             "",
@@ -189,9 +218,9 @@ def main(argv: list[str] | None = None) -> int:
     if args.json:
         if extracted_audio:
             summary["extracted_audio"] = extracted_audio
-        print(json.dumps(summary, ensure_ascii=False, indent=2))
+        emit_text(json.dumps(summary, ensure_ascii=False, indent=2))
     else:
-        print(render_markdown(summary, extracted_audio))
+        emit_text(render_markdown(summary, extracted_audio))
     return 0
 
 

@@ -1,6 +1,6 @@
 ---
 name: suno-lyric-writer
-description: Write original song lyrics and Suno-ready Custom Mode inputs including title, structured lyrics with section tags, style-of-music prompt, exclude styles, vocal notes, creative sliders, production tips, and iteration notes. Analyze user-provided reference audio or video to extract style traits, lyric-writing references, arrangement notes, and a feedback-driven creative brief. Use curated genre prompts, Suno tag vocabulary, vocal effects, rap/rock style maps, and tag-combination guidance when the user asks for exact style wording. Use when the user asks to write lyrics, make a song for Suno, prepare music style and parameters, convert an idea or reference media into Suno prompts, revise lyrics for singability, create instrumental or genre-switch prompts, or package copy-paste material for AI music generation.
+description: Write original song lyrics and Suno-ready Custom Mode inputs including title, structured lyrics with section tags, style-of-music prompt, exclude styles, vocal notes, creative sliders, production tips, and iteration notes. Analyze user-provided reference audio or video to extract style traits, lyric-writing references, arrangement notes, and a feedback-driven creative brief. Use curated genre prompts, Suno tag vocabulary, vocal effects, rap/rock style maps, Chinese lyric craft guidance, and tag-combination guidance when the user asks for exact style wording or natural Mandarin lyrics. Use when the user asks to write lyrics, make a song for Suno, prepare music style and parameters, convert an idea or reference media into Suno prompts, revise lyrics for singability, optimize Chinese lyrics, create instrumental or genre-switch prompts, or package copy-paste material for AI music generation.
 ---
 
 # Suno Lyric Writer
@@ -17,8 +17,9 @@ Deliver copy-paste-ready Suno material:
 6. Production tips and notes for the next generation pass
 7. Reference analysis when audio, video, transcript, or lyrics are provided
 8. Genre/tag vocabulary support when the user needs exact Suno wording
+9. Chinese lyric craft support when the user writes in Chinese or asks for Mandarin lyrics
 
-If the user writes in Chinese or asks for Chinese lyrics, respond in Chinese and write natural Chinese lyrics. Keep Suno section tags in English unless the user asks otherwise.
+If the user writes in Chinese or asks for Chinese lyrics, respond in Chinese and write natural Mandarin lyrics. Keep Suno section tags in English unless the user asks otherwise.
 
 ## Workflow
 
@@ -39,6 +40,7 @@ If the user writes in Chinese or asks for Chinese lyrics, respond in Chinese and
    - Prefer one strong hook over many ideas. Keep section count compact for a first Suno generation.
 5. Draft lyrics.
    - Read `references/songwriting-craft.md` for lyric craft, structure choices, Chinese lyric notes, rhyme, hooks, and anti-cliche guidance.
+   - Read `references/chinese-lyric-craft.md` when the user writes in Chinese, asks for Chinese/Mandarin lyrics, wants lyric polishing, or provides Chinese lyrics to revise.
    - Use explicit section tags and concise lines. Keep each section singable before making it clever.
 6. Build the Suno style prompt.
    - Read `references/style-parameters.md` when choosing genre/style wording, sliders, vocal settings, model notes, exclude styles, or persona/audio-upload guidance.
@@ -53,6 +55,7 @@ If the user writes in Chinese or asks for Chinese lyrics, respond in Chinese and
    - Separate style instructions from lyrics so Suno does not sing production notes.
 8. Review before final.
    - Read `references/quality-review.md` and audit originality, prosody, hook clarity, section balance, style fit, and Suno readiness.
+   - For Chinese lyrics, also check natural Mandarin word order, compact line lengths, loose rhyme, and whether the chorus is easier to remember than the verses.
    - Revise weak lines instead of explaining around them.
 9. Package if requested.
    - Use `scripts/build_suno_prompt.py` to assemble a Markdown package from a finished title, style prompt, lyrics file, exclude styles, and parameters.

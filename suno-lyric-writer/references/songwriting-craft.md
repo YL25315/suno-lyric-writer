@@ -29,6 +29,7 @@ Use this file when drafting or revising lyrics.
 
 ## Chinese Lyric Notes
 
+- For detailed Mandarin lyric revision, read `chinese-lyric-craft.md`.
 - Write for natural Mandarin phrasing, not translated English syntax.
 - Favor vivid concrete nouns and verbs over abstract slogan language.
 - Keep line lengths compact so Suno has room to phrase them musically.

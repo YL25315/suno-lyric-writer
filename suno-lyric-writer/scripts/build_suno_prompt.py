@@ -9,13 +9,7 @@ import re
 import sys
 from pathlib import Path
 
-
-def emit_text(text: str) -> None:
-    data = (text + "\n").encode("utf-8")
-    if hasattr(sys.stdout, "buffer"):
-        sys.stdout.buffer.write(data)
-    else:
-        sys.stdout.write(text + "\n")
+from _common import emit_text
 
 
 def decode_text_bytes(data: bytes) -> str:
@@ -131,9 +125,11 @@ def field_checks(package: dict[str, object]) -> list[str]:
 
 def render_markdown(package: dict[str, object]) -> str:
     params = package["parameters"]
-    assert isinstance(params, dict)
+    if not isinstance(params, dict):
+        raise TypeError("package['parameters'] must be a dict")
     tips = package["production_tips"]
-    assert isinstance(tips, list)
+    if not isinstance(tips, list):
+        raise TypeError("package['production_tips'] must be a list")
     lines = [f"# {package['title']}", ""]
     if package["reference_analysis"]:
         lines.extend(["## Reference Analysis", str(package["reference_analysis"]), ""])
@@ -182,7 +178,8 @@ def render_markdown(package: dict[str, object]) -> str:
         ]
     )
     feedback_questions = package["feedback_questions"]
-    assert isinstance(feedback_questions, list)
+    if not isinstance(feedback_questions, list):
+        raise TypeError("package['feedback_questions'] must be a list")
     if feedback_questions:
         lines.extend(["### Next Feedback Questions", *[f"- {question}" for question in feedback_questions], ""])
     return "\n".join(lines)

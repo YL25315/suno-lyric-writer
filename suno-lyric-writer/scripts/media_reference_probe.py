@@ -11,13 +11,7 @@ import sys
 from pathlib import Path
 from typing import Any
 
-
-def emit_text(text: str) -> None:
-    data = (text + "\n").encode("utf-8")
-    if hasattr(sys.stdout, "buffer"):
-        sys.stdout.buffer.write(data)
-    else:
-        sys.stdout.write(text + "\n")
+from _common import emit_text, time_value
 
 
 def run_json(cmd: list[str]) -> dict[str, Any]:
@@ -44,7 +38,7 @@ def run_json(cmd: list[str]) -> dict[str, Any]:
 
 def run_command(cmd: list[str]) -> None:
     try:
-        result = subprocess.run(
+        subprocess.run(
             cmd,
             check=True,
             capture_output=True,
@@ -188,9 +182,12 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
     parser.add_argument("media", help="Reference audio or video file")
     parser.add_argument("--json", action="store_true", help="Emit JSON")
     parser.add_argument("--extract-audio", help="Write 16 kHz mono WAV for speech/music analysis")
-    parser.add_argument("--start", help="Start time for --extract-audio only, e.g. 30 or 00:30")
-    parser.add_argument("--duration", help="Duration for --extract-audio only, e.g. 60 or 01:00")
-    return parser.parse_args(argv)
+    parser.add_argument("--start", type=time_value, help="Start time for --extract-audio only, e.g. 30 or 00:30")
+    parser.add_argument("--duration", type=time_value, help="Duration for --extract-audio only, e.g. 60 or 01:00")
+    args = parser.parse_args(argv)
+    if (args.start or args.duration) and not args.extract_audio:
+        parser.error("--start and --duration only apply when --extract-audio is set")
+    return args
 
 
 def main(argv: list[str] | None = None) -> int:

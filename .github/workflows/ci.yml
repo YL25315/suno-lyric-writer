@@ -16,5 +16,7 @@ jobs:
         run: python -m pip install -r requirements-dev.txt
       - name: Check script syntax
         run: python -m py_compile suno-lyric-writer/scripts/build_suno_prompt.py suno-lyric-writer/scripts/media_reference_probe.py suno-lyric-writer/scripts/deep_audio_analyze.py
+      - name: Lint
+        run: python -m ruff check .
       - name: Run tests
-        run: python -m pytest -q
+        run: python -m pytest --cov=suno-lyric-writer/scripts --cov-report=term-missing -q

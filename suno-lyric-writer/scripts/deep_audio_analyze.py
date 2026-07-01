@@ -14,32 +14,9 @@ import sys
 from pathlib import Path
 from typing import Any
 
+from _common import emit_text, parse_time_seconds, time_value
 
 PITCH_CLASSES = ["C", "C#", "D", "Eb", "E", "F", "F#", "G", "Ab", "A", "Bb", "B"]
-
-
-def emit_text(text: str) -> None:
-    data = (text + "\n").encode("utf-8")
-    if hasattr(sys.stdout, "buffer"):
-        sys.stdout.buffer.write(data)
-    else:
-        sys.stdout.write(text + "\n")
-
-
-def parse_time_seconds(value: str | None) -> float | None:
-    if not value:
-        return None
-    parts = value.split(":")
-    try:
-        if len(parts) == 1:
-            return float(parts[0])
-        if len(parts) == 2:
-            return int(parts[0]) * 60 + float(parts[1])
-        if len(parts) == 3:
-            return int(parts[0]) * 3600 + int(parts[1]) * 60 + float(parts[2])
-    except ValueError:
-        return None
-    return None
 
 
 def format_seconds(value: float | None) -> str:
@@ -423,6 +400,7 @@ def optional_librosa_analysis(
     if len(y) == 0:
         return {"available": False, "reason": "no audio decoded by librosa"}
     tempo_value = None
+    tempo_error = ""
     beats = []
     try:
         tempo, beats = librosa.beat.beat_track(y=y, sr=sr)
@@ -670,8 +648,8 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
     parser.add_argument("media", help="Reference audio or video file")
     parser.add_argument("--json", action="store_true", help="Emit JSON instead of Markdown")
     parser.add_argument("--out", help="Write output to a file")
-    parser.add_argument("--start", help="Start time, e.g. 30 or 00:30")
-    parser.add_argument("--duration", help="Analyze duration, e.g. 90 or 01:30")
+    parser.add_argument("--start", type=time_value, help="Start time, e.g. 30 or 00:30")
+    parser.add_argument("--duration", type=time_value, help="Analyze duration, e.g. 90 or 01:30")
     parser.add_argument(
         "--max-duration",
         type=float,

@@ -19,6 +19,7 @@ Suno Lyric Writer 是一个 Codex skill，用来把歌曲想法、歌词草稿�
 ```text
 .
   README.md
+  pyproject.toml
   requirements.txt
   requirements-dev.txt
   LICENSE
@@ -137,7 +138,8 @@ py -3.14 -m py_compile `
 测试：
 
 ```powershell
-py -3.14 -m pytest -q
+py -3.14 -m ruff check .
+py -3.14 -m pytest --cov=suno-lyric-writer/scripts --cov-report=term-missing -q
 ```
 
 Codex skill validator：

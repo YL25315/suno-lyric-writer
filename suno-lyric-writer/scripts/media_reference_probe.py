@@ -35,12 +35,16 @@ def run_json(cmd: list[str]) -> dict[str, Any]:
     except subprocess.CalledProcessError as exc:
         message = exc.stderr.strip() or exc.stdout.strip() or str(exc)
         raise SystemExit(f"error: command failed: {message}") from exc
-    return json.loads(result.stdout)
+    try:
+        return json.loads(result.stdout)
+    except json.JSONDecodeError as exc:
+        sample = (result.stdout or result.stderr or "").strip()[:800]
+        raise SystemExit(f"error: ffprobe returned non-JSON output: {sample or exc}") from exc
 
 
 def run_command(cmd: list[str]) -> None:
     try:
-        subprocess.run(
+        result = subprocess.run(
             cmd,
             check=True,
             capture_output=True,
@@ -51,7 +55,8 @@ def run_command(cmd: list[str]) -> None:
     except FileNotFoundError as exc:
         raise SystemExit(f"error: missing executable: {cmd[0]}") from exc
     except subprocess.CalledProcessError as exc:
-        raise SystemExit(f"error: command failed with exit code {exc.returncode}") from exc
+        message = (exc.stderr or exc.stdout or "").strip()
+        raise SystemExit(f"error: command failed with exit code {exc.returncode}: {message}") from exc
 
 
 def seconds(value: str | None) -> float | None:
@@ -183,8 +188,8 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
     parser.add_argument("media", help="Reference audio or video file")
     parser.add_argument("--json", action="store_true", help="Emit JSON")
     parser.add_argument("--extract-audio", help="Write 16 kHz mono WAV for speech/music analysis")
-    parser.add_argument("--start", help="Start time for extraction, e.g. 00:30")
-    parser.add_argument("--duration", help="Extraction duration, e.g. 60")
+    parser.add_argument("--start", help="Start time for --extract-audio only, e.g. 30 or 00:30")
+    parser.add_argument("--duration", help="Duration for --extract-audio only, e.g. 60 or 01:00")
     return parser.parse_args(argv)
 
 

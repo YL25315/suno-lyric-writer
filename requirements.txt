@@ -1,0 +1,9 @@
+# Runtime dependencies for optional deep audio analysis.
+#
+# ffmpeg and ffprobe are external command-line dependencies and must be
+# installed separately. The scripts still run in a reduced ffmpeg-only mode
+# when these Python packages are absent, except for optional key/chord analysis.
+numpy>=2.4,<3
+scipy>=1.18,<2
+librosa==0.11.0
+soundfile>=0.14,<0.15

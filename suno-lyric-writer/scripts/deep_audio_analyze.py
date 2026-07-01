@@ -75,6 +75,7 @@ def run_ffmpeg_pcm(
     sample_rate: int,
     start: str | None,
     duration: str | None,
+    max_duration: float,
 ) -> bytes:
     if not shutil.which("ffmpeg"):
         raise SystemExit("error: ffmpeg is required")
@@ -82,8 +83,11 @@ def run_ffmpeg_pcm(
     if start:
         cmd.extend(["-ss", start])
     cmd.extend(["-i", str(media_path)])
-    if duration:
-        cmd.extend(["-t", duration])
+    effective_duration = duration
+    if not effective_duration and max_duration > 0:
+        effective_duration = str(max_duration)
+    if effective_duration:
+        cmd.extend(["-t", effective_duration])
     cmd.extend(["-vn", "-ac", "1", "-ar", str(sample_rate), "-f", "s16le", "pipe:1"])
     try:
         result = subprocess.run(cmd, check=True, capture_output=True)
@@ -412,15 +416,34 @@ def optional_librosa_analysis(
         }
     offset = parse_time_seconds(start) or 0.0
     duration_seconds = parse_time_seconds(duration)
-    y, sr = librosa.load(str(media_path), sr=sample_rate, mono=True, offset=offset, duration=duration_seconds)
+    try:
+        y, sr = librosa.load(str(media_path), sr=sample_rate, mono=True, offset=offset, duration=duration_seconds)
+    except Exception as exc:
+        return {"available": False, "reason": f"librosa failed to load audio: {exc}"}
     if len(y) == 0:
         return {"available": False, "reason": "no audio decoded by librosa"}
-    tempo, beats = librosa.beat.beat_track(y=y, sr=sr)
-    tempo_value = float(np.ravel(tempo)[0]) if np.size(tempo) else None
+    tempo_value = None
+    beats = []
     try:
-        chroma = librosa.feature.chroma_cqt(y=y, sr=sr)
-    except Exception:
-        chroma = librosa.feature.chroma_stft(y=y, sr=sr)
+        tempo, beats = librosa.beat.beat_track(y=y, sr=sr)
+        tempo_value = float(np.ravel(tempo)[0]) if np.size(tempo) else None
+    except Exception as exc:
+        tempo_error = str(exc)
+    else:
+        tempo_error = ""
+    try:
+        try:
+            chroma = librosa.feature.chroma_cqt(y=y, sr=sr)
+        except Exception:
+            chroma = librosa.feature.chroma_stft(y=y, sr=sr)
+    except Exception as exc:
+        return {
+            "available": False,
+            "reason": f"librosa chroma analysis failed: {exc}",
+            "librosa_tempo_bpm": round(tempo_value, 1) if tempo_value else None,
+            "beat_count": int(len(beats)),
+            "tempo_error": tempo_error,
+        }
     mean_chroma = np.mean(chroma, axis=1)
     key = key_from_chroma(mean_chroma)
     chord_windows: list[dict[str, Any]] = []
@@ -431,9 +454,12 @@ def optional_librosa_analysis(
             continue
         chunk = y[start_sample:end_sample]
         try:
-            chunk_chroma = librosa.feature.chroma_cqt(y=chunk, sr=sr)
+            try:
+                chunk_chroma = librosa.feature.chroma_cqt(y=chunk, sr=sr)
+            except Exception:
+                chunk_chroma = librosa.feature.chroma_stft(y=chunk, sr=sr)
         except Exception:
-            chunk_chroma = librosa.feature.chroma_stft(y=chunk, sr=sr)
+            continue
         chord, confidence = chord_from_chroma(np.mean(chunk_chroma, axis=1))
         chord_windows.append(
             {
@@ -447,6 +473,7 @@ def optional_librosa_analysis(
         "available": True,
         "librosa_tempo_bpm": round(tempo_value, 1) if tempo_value else None,
         "beat_count": int(len(beats)),
+        "tempo_error": tempo_error,
         "key_guess": key,
         "chord_windows": merge_chord_windows(chord_windows[:24]),
     }
@@ -504,7 +531,7 @@ def analyze(args: argparse.Namespace) -> dict[str, Any]:
     media_path = Path(args.media)
     if not media_path.exists():
         raise SystemExit(f"error: media file not found: {media_path}")
-    pcm = run_ffmpeg_pcm(media_path, args.sample_rate, args.start, args.duration)
+    pcm = run_ffmpeg_pcm(media_path, args.sample_rate, args.start, args.duration, args.max_duration)
     samples = decode_pcm_samples(pcm)
     if not samples:
         raise SystemExit("error: no audio samples decoded")
@@ -551,6 +578,11 @@ def analyze(args: argparse.Namespace) -> dict[str, Any]:
         "suno_style_prompt_seed": ", ".join(traits),
         "caveats": [
             "Tempo, section, key, and chord estimates are creative guidance, not musicological proof.",
+            (
+                f"PCM is decoded in memory; default analysis is capped at {args.max_duration:g} seconds unless --duration or --max-duration changes it."
+                if args.max_duration > 0
+                else "PCM is decoded in memory; use --duration for very long files."
+            ),
             "Chord and key guesses require optional librosa dependencies.",
             "Use the traits to describe a new song; do not copy melody, lyrics, or distinctive arrangement signatures.",
         ],
@@ -638,8 +670,14 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
     parser.add_argument("media", help="Reference audio or video file")
     parser.add_argument("--json", action="store_true", help="Emit JSON instead of Markdown")
     parser.add_argument("--out", help="Write output to a file")
-    parser.add_argument("--start", help="Start time, e.g. 00:30")
+    parser.add_argument("--start", help="Start time, e.g. 30 or 00:30")
     parser.add_argument("--duration", help="Analyze duration, e.g. 90 or 01:30")
+    parser.add_argument(
+        "--max-duration",
+        type=float,
+        default=600.0,
+        help="Maximum seconds to decode when --duration is omitted; use 0 to analyze the full file",
+    )
     parser.add_argument("--sample-rate", type=int, default=11025)
     parser.add_argument("--frame-seconds", type=float, default=0.10)
     parser.add_argument("--hop-seconds", type=float, default=0.05)
@@ -654,6 +692,8 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
         parser.error("frame, hop, and window durations must be positive")
     if args.min_bpm <= 0 or args.max_bpm <= args.min_bpm:
         parser.error("BPM range is invalid")
+    if args.max_duration < 0:
+        parser.error("--max-duration must be 0 or greater")
     return args
 
 

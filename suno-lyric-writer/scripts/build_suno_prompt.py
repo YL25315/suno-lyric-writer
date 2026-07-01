@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -72,6 +73,11 @@ def count_words(text: str) -> int:
     return len([part for part in text.replace("\n", " ").split(" ") if part.strip()])
 
 
+def count_non_cjk_words(text: str) -> int:
+    without_cjk = re.sub(r"[\u4e00-\u9fff]+", " ", text)
+    return len([part for part in re.split(r"\s+", without_cjk) if part.strip()])
+
+
 def count_cjk_chars(text: str) -> int:
     return sum(1 for char in text if "\u4e00" <= char <= "\u9fff")
 
@@ -104,10 +110,15 @@ def field_checks(package: dict[str, object]) -> list[str]:
     style = str(package["style_of_music"])
     lyrics = str(package["lyrics"])
     exclude = str(package["exclude_styles"])
+    cjk_count = count_cjk_chars(lyrics)
     checks = [
         f"Style characters: {len(style)}",
         f"Lyrics characters: {len(lyrics)}",
-        f"Lyrics words: {count_words(lyrics)}",
+        (
+            f"Lyrics non-CJK words: {count_non_cjk_words(lyrics)}"
+            if cjk_count
+            else f"Lyrics words: {count_words(lyrics)}"
+        ),
         *lyric_line_checks(lyrics),
     ]
     if exclude:

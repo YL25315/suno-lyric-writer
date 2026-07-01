@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Shared helpers for Suno Lyric Writer scripts."""
+"""Shared helpers for 词灵 / MuseLyric scripts."""
 
 from __future__ import annotations
 
@@ -47,3 +47,12 @@ def time_value(value: str) -> str:
     if parsed < 0:
         raise argparse.ArgumentTypeError("must be 0 or greater")
     return value
+
+
+def decode_text_bytes(data: bytes) -> str:
+    for encoding in ("utf-8-sig", "utf-16", "gb18030"):
+        try:
+            return data.decode(encoding)
+        except UnicodeDecodeError:
+            continue
+    return data.decode("utf-8", errors="replace")

@@ -1,5 +1,5 @@
 ---
-name: suno-lyric-writer
+name: muse-lyric
 description: >-
   Write original lyrics and Suno-ready Custom Mode inputs: title, section-tagged
   lyrics, style prompt, exclusions, vocal notes, parameters, and iteration tips.
@@ -9,7 +9,7 @@ description: >-
   audio analysis, genre/style wording, lyric revision, or AI music packaging.
 ---
 
-# Suno Lyric Writer
+# 词灵 / MuseLyric
 
 ## Output Contract
 

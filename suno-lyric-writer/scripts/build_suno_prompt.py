@@ -9,16 +9,7 @@ import re
 import sys
 from pathlib import Path
 
-from _common import emit_text
-
-
-def decode_text_bytes(data: bytes) -> str:
-    for encoding in ("utf-8-sig", "utf-16", "gb18030"):
-        try:
-            return data.decode(encoding)
-        except UnicodeDecodeError:
-            continue
-    return data.decode("utf-8", errors="replace")
+from _common import decode_text_bytes, emit_text
 
 
 def percent(value: str) -> int:

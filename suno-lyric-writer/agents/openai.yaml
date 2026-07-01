@@ -1,7 +1,7 @@
 interface:
-  display_name: "Suno Lyric Writer"
+  display_name: "词灵 / MuseLyric"
   short_description: "Write lyrics, Chinese lyric revisions, and Suno-ready prompts"
-  default_prompt: "Use $suno-lyric-writer to turn this song idea or Chinese lyric draft into structured lyrics, a Suno style prompt, and generation parameters."
+  default_prompt: "Use $muse-lyric to turn this song idea or Chinese lyric draft into structured lyrics, a Suno style prompt, and generation parameters."
 
 policy:
   allow_implicit_invocation: true

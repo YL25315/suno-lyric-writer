@@ -1,6 +1,12 @@
 ---
 name: suno-lyric-writer
-description: Write original song lyrics and Suno-ready Custom Mode inputs including title, structured lyrics with section tags, style-of-music prompt, exclude styles, vocal notes, creative sliders, production tips, and iteration notes. Analyze user-provided reference audio or video to extract style traits, tempo/groove, energy sections, tonal hints, lyric-writing references, arrangement notes, and a feedback-driven creative brief. Use curated genre prompts, Suno tag vocabulary, vocal effects, rap/rock style maps, Chinese lyric craft guidance, deep audio analysis, and tag-combination guidance when the user asks for exact style wording or natural Mandarin lyrics. Use when the user asks to write lyrics, make a song for Suno, prepare music style and parameters, convert an idea or reference media into Suno prompts, revise lyrics for singability, optimize Chinese lyrics, analyze reference audio, create instrumental or genre-switch prompts, or package copy-paste material for AI music generation.
+description: >-
+  Write original lyrics and Suno-ready Custom Mode inputs: title, section-tagged
+  lyrics, style prompt, exclusions, vocal notes, parameters, and iteration tips.
+  Analyze reference audio/video for reusable traits such as tempo, groove,
+  energy sections, tonal hints, arrangement, vocal tone, and lyric mechanics.
+  Use when the user asks for Suno prompts, Chinese lyric optimization, reference
+  audio analysis, genre/style wording, lyric revision, or AI music packaging.
 ---
 
 # Suno Lyric Writer
